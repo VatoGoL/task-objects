@@ -8,6 +8,21 @@
   Объект после манипуляций следует вернуть в качестве результата работы функции.
 */
 export function personUpdate(data) {
+    if (data.gender) {
+        switch (data.gender) {
+            case 'female':
+                if (data.age) {
+                    delete data.age;
+                }
+                break;
+            case 'male':
+                if (!data.income) {
+                    data.income = 100000;
+                }
+                break;
+        }
+    }
+    return data;
 }
 
 /*
@@ -15,6 +30,21 @@ export function personUpdate(data) {
   Верните список названий этих полей в алфавитном порядке в виде массива строк.
 */
 export function objectFieldsList(obj1, obj2, obj3) {
+    let result = new Array();
+
+    for (let key in obj1) {
+        result.push(key);
+    }
+    for (let key in obj2) {
+        result.push(key);
+    }
+    for (let key in obj3) {
+        result.push(key);
+    }
+
+    result = result.sort();
+
+    return result;
 }
 
 /*
@@ -23,4 +53,34 @@ export function objectFieldsList(obj1, obj2, obj3) {
   Количество клонов - count.
 */
 export function objectClone(obj, count) {
+    let result = new Array(count);
+
+    for (let i = 0; i < count; i++) {
+        result[i] = {
+            id: i,
+        };
+
+        for (let key in obj) {
+            result[i][key] = obj[key];
+            if (typeof result[i][key] == 'object') {
+                result[i][key] = ob(result[i][key]);
+            } else {
+                result[i][key] = obj[key];
+            }
+        }
+    }
+
+    function ob(obj) {
+        let res = Object();
+        for (let key in obj) {
+            if (typeof res[key] == 'object') {
+                res[key] = ob(res[key]);
+            } else {
+                res[key] = obj[key];
+            }
+        }
+        return res;
+    }
+
+    return result;
 }
